@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Панель здоровья</title>
+    <link rel="stylesheet" href="./dashboard.css" />
+    <script>
+window.addEventListener("DOMContentLoaded", async () => {
+  const parts = ["dashboard-js-01.b64","dashboard-js-02.b64","dashboard-js-03.b64","dashboard-js-04.b64","dashboard-js-05.b64","dashboard-js-06.b64","dashboard-js-07.b64"];
+  const base64 = (await Promise.all(parts.map(async (name) => {
+    const response = await fetch(name);
+    if (!response.ok) throw new Error("Не удалось загрузить " + name);
+    return response.text();
+  }))).join("");
+  const binary = atob(base64);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  const code = new TextDecoder("utf-8").decode(bytes);
+  (0, eval)(code);
+});
+</script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="top">
+        <div class="identity">
+          <span class="mark">H</span>
+          <div>
+            <p class="kicker">Обезличенная версия</p>
+            <h1>Панель здоровья</h1>
+            <p class="subhead"> Данные из PDF без ФИО, даты рождения, почты и номеров документов. Период анализов: апрель - май 2026.
+            </p>
+          </div>
+        </div>
+        <div class="source-card">
+          <span class="source-label">Покрытие</span>
+          <strong>33 результата</strong>
+          <span>новые PDF с рабочего стола добавлены</span>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Разделы">
+        <button class="tab is-active" type="button" data-target="overview">Обзор</button>
+        <button class="tab" type="button" data-target="markers">Показатели</button>
+        <button class="tab" type="button" data-target="systems">Системы</button>
+        <button class="tab" type="button" data-target="files">Файлы</button>
+      </nav>
+
+      <main>
+        <section id="overview" class="panel-view is-active">
+          <section class="notice public-note"><strong>Публичная копия:</strong> ФИО, дата рождения, почта, номера документов и PDF не публикуются. Значения анализов остаются медицинской информацией.
+          </section>
+
+          <section class="notice">
+            <strong>Важно спокойно:</strong>
+            это не диагноз. Я сравнила значения с референсами лаборатории и выделила то,
+            что лучше обсудить с врачом или перепроверить.
+          </section>
+
+          <section class="summary-grid" id="summaryGrid"></section>
+
+          <section class="band">
+            <div class="section-title">
+              <p class="kicker">Динамика</p>
+              <h2>Что изменилось между апрелем и маем</h2>
+            </div>
+            <div class="trend-list" id="trendList"></div>
+          </section>
+
+          <section class="band">
+            <div class="section-title">
+              <p class="kicker">Приоритет</p>
+              <h2>Что требует внимания</h2>
+            </div>
+            <div class="attention-list" id="attentionList"></div>
+          </section>
+
+          <section class="band two">
+            <div>
+              <div class="section-title">
+                <p class="kicker">Хорошие новости</p>
+                <h2>Что выглядит спокойно</h2>
+              </div>
+              <div class="plain-list" id="goodList"></div>
+            </div>
+            <div>
+              <div class="section-title">
+                <p class="kicker">Пробелы</p>
+                <h2>Что еще не закрыто анализами</h2>
+              </div>
+              <div class="plain-list warning" id="missingList"></div>
+            </div>
+          </section>
+        </section>
+
+        <section id="markers" class="panel-view">
+          <section class="toolbar">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="searchInput" type="search" placeholder="например, ALT или лейкоциты" />
+            </label>
+            <div class="filter-group" aria-label="Фильтр статуса">
+              <button class="filter is-active" type="button" data-filter="all">Все</button>
+              <button class="filter" type="button" data-filter="attention">Внимание</button>
+              <button class="filter" type="button" data-filter="ok">В норме</button>
+            </div>
+          </section>
+          <section class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Показатель</th>
+                  <th>Результат</th>
+                  <th>Референс</th>
+                  <th>Статус</th>
+                  <th>Раздел</th>
+                </tr>
+              </thead>
+              <tbody id="markerTable"></tbody>
+            </table>
+          </section>
+        </section>
+
+        <section id="systems" class="panel-view">
+          <section class="systems-grid" id="systemsGrid"></section>
+        </section>
+
+        <section id="files" class="panel-view">
+          <section class="band">
+            <div class="section-title">
+              <p class="kicker">Источники</p>
+              <h2>Какие документы вошли в дашборд</h2>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        <span>Референсы взяты из PDF ЛИТЕХ. Справочно:
+          <a href="https://medlineplus.gov/lab-tests/alt-blood-test" target="_blank" rel="noreferrer">ALT</a>,
+          <a href="https://medlineplus.gov/lab-tests/white-blood-count-wbc/" target="_blank" rel="noreferrer">WBC</a>,
+          <a href="https://medlineplus.gov/urinalysis.html" target="_blank" rel="noreferrer">анализ мочи</a>,
+          <a href="https://www.cdc.gov/cholesterol/about/index.html" target="_blank" rel="noreferrer">холестерин</a>,
+          <a href="https://medlineplus.gov/thyroidtests.html" target="_blank" rel="noreferrer">щитовидка</a>,
+          <a href="https://www.cdc.gov/uti/about/index.html" target="_blank" rel="noreferrer">UTI</a>.
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>
